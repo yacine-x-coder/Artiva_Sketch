@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artiva - Elite Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* إعدادات أساسية */
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --bg:#020617;
+  --card:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.06);
+  --accent1:#38bdf8;
+  --accent2:#6366f1;
+  --danger: #ef4444;
+}
+
+body, button, input { font-family: "Inter", sans-serif; }
+body { background: var(--bg); color: white; overflow-x: hidden; scroll-behavior: smooth; cursor: none; transition: opacity 0.4s ease; }
+[dir="rtl"] body, [dir="rtl"] button, [dir="rtl"] input { font-family: "Cairo", "Inter", sans-serif; }
+a, button, .card, .contact-card, .action-btn, input, .suggested-btn, .project-card, .chat-action-btn, .confirm-btn, .lang-btn { cursor: none; }
+
+/* LOADER */
+.loader{position:fixed;inset:0;background:#020617;display:flex;align-items:center;justify-content:center;z-index:999999; transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s; backdrop-filter: blur(20px);}
+.loader span{width:80px;height:80px;border:3px solid rgba(255,255,255,0.05);border-top:3px solid var(--accent1);border-right:3px solid var(--accent2);border-radius:50%;animation:spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite, glowPulse 2s infinite alternate;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glowPulse { 0% { box-shadow: 0 0 10px rgba(56,189,248,0.2), inset 0 0 10px rgba(99,102,241,0.2); } 100% { box-shadow: 0 0 30px rgba(56,189,248,0.6), inset 0 0 30px rgba(99,102,241,0.6); } }
+
+/* PRO CUSTOM CURSOR */
+.cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999999; transform: translate(-50%, -50%); box-shadow: 0 0 15px #fff; mix-blend-mode: difference; transition: width 0.2s, height 0.2s;}
+.cursor-ring { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999998; transform: translate(-50%, -50%); transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, background 0.4s, backdrop-filter 0.4s; }
+.cursor-ring.hovered { width: 70px; height: 70px; border-color: transparent; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(4px); box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); }
+.cursor-ring.danger-hover { background: rgba(239, 68, 68, 0.2); box-shadow: 0 0 30px rgba(239, 68, 68, 0.4); border-color: rgba(239, 68, 68, 0.5);}
+
+/* NAV & LUXURY LANGUAGE SWITCHER */
+header{position:fixed;width:100%;display:flex;justify-content:space-between;align-items:center;padding:15px 8%;z-index:1000; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
+header::before {content:''; position:absolute; inset:0; background:rgba(2,6,23,0); backdrop-filter:blur(0px); z-index:-1; transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1); border-bottom: 1px solid transparent;}
+header.scrolled::before { background:rgba(2,6,23,0.75); backdrop-filter:blur(25px); border-bottom: 1px solid rgba(255,255,255,0.05); box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+
+.header-logo { height: 45px; width: auto; object-fit: contain; opacity: 0; transform: translateY(-20px); animation: dropIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.2)); transition: 0.5s; }
+.header-logo:hover { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 0 30px rgba(99, 102, 241, 1)); }
+
+nav { display: flex; align-items: center; }
+nav a.nav-link { margin: 0 12px; text-decoration: none; color: #94a3b8; position: relative; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: color 0.4s ease, transform 0.4s; }
+nav a.nav-link:nth-child(1) { animation: dropIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards; }
+nav a.nav-link:nth-child(2) { animation: dropIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s forwards; }
+nav a.nav-link:nth-child(3) { animation: dropIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards; }
+nav a.nav-link:nth-child(4) { animation: dropIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards; }
+
+nav a.nav-link:hover { color: #fff; transform: translateY(-3px); text-shadow: 0 0 20px rgba(255,255,255,0.8); }
+nav a.nav-link::after { content: ""; position: absolute; bottom: -6px; left: 50%; width: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent1), transparent); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform: translateX(-50%); opacity: 0;}
+nav a.nav-link:hover::after { width: 120%; opacity: 1; box-shadow: 0 0 10px var(--accent1); }
+
+@keyframes dropIn { to { opacity: 1; transform: translateY(0); } }
+
+.lang-menu { position: relative; display: inline-block; margin-inline-start: 25px; opacity: 0; transform: translateY(-20px); animation: dropIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards; }
+.lang-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: #cbd5e1; padding: 8px 18px; border-radius: 30px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(10px); position: relative; overflow: hidden;}
+.lang-btn:hover, .lang-menu.active .lang-btn { background: rgba(56, 189, 248, 0.1); border-color: var(--accent1); color: #fff; box-shadow: 0 5px 25px rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+.lang-dropdown { position: absolute; top: 140%; right: 0; width: 160px; background: rgba(6, 11, 25, 0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(20px) scale(0.9); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(30px); box-shadow: 0 30px 60px rgba(0,0,0,0.9); transform-origin: top center; z-index: 100;}
+[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+.lang-menu.active .lang-dropdown { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+.lang-dropdown button { display: flex; align-items: center; gap: 12px; padding: 14px 20px; color: #94a3b8; text-decoration: none; font-size: 0.9rem; font-weight: 600; border:none; background:transparent; width:100%; text-align:start; border-bottom: 1px solid rgba(255, 255, 255, 0.03); transition: all 0.4s;}
+.lang-dropdown button:hover { color: #fff; padding-inline-start: 28px; background: rgba(56, 189, 248, 0.1); }
+
+/* HERO SECTION - Flow Layout Videos */
+.hero-flow { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; perspective: 1500px;}
+
+.flow-grid { 
+    position: absolute; top: -20%; left: -10%; width: 120%; height: 140%; 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    grid-auto-rows: 150px; 
+    gap: 15px; z-index: 1; opacity: 0.55; /* زيادة الشفافية */
+    transform: rotate(-5deg) scale(1.1);
+    animation: flowPan 40s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95); 
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
+}
+@keyframes flowPan { 0% { transform: translateY(0) rotate(-3deg) scale(1.1); } 100% { transform: translateY(-5%) rotate(-6deg) scale(1.15); } }
+
+.flow-item { border-radius: 20px; overflow: hidden; background: var(--card); position: relative; border: 1px solid var(--border); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; animation: fadeGrid 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
+@keyframes fadeGrid { to { opacity: 1; } }
+
+.flow-item:nth-child(1) { grid-column: span 2; grid-row: span 2; animation-delay: 0.2s; }
+.flow-item:nth-child(4) { grid-row: span 2; animation-delay: 0.5s; }
+.flow-item:nth-child(5) { grid-column: span 2; animation-delay: 0.7s; }
+.flow-item:nth-child(8) { grid-column: span 2; grid-row: span 2; animation-delay: 0.4s; }
+.flow-item:nth-child(11) { grid-row: span 2; animation-delay: 0.8s; }
+
+/* جعل الفيديوهات أكثر بياناً ووضوحاً */
+.flow-item video { width: 100%; height: 100%; object-fit: cover; filter: grayscale(15%) brightness(0.85); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.flow-item:hover { z-index: 10; box-shadow: 0 30px 60px rgba(56, 189, 248, 0.4); border-color: var(--accent1); transform: scale(1.05) translateZ(50px);}
+.flow-item:hover video { filter: grayscale(0%) brightness(1.1) contrast(1.1); transform: scale(1.1); }
+.empty-item { background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); backdrop-filter: blur(15px); }
+
+/* تخفيف التظليل لتبدو الفيديوهات واضحة أكثر */
+.hero-shadows { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 0%, rgba(2,6,23,0.7) 100%); z-index: 2; pointer-events: none; }
+
+/* تأثير الضباب السينمائي المتجاوب مع الماوس (Flow effect) */
+.hero-content { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; animation: heroFloat 8s ease-in-out infinite; }
+@keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+.fog-cursor {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    left: var(--fog-x, 50%);
+    top: var(--fog-y, 50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
+    mask-image: radial-gradient(circle, black 30%, transparent 70%);
+    z-index: 10;
+}
+.hero-content:hover .fog-cursor { opacity: 1; }
+
+.hero-content h2 { font-size: 4.8rem; font-weight: 900; line-height: 1.1; letter-spacing: -1.5px; color: #fff; text-shadow: 0 20px 50px rgba(0,0,0,0.9); direction: ltr; position: relative; }
+[dir="rtl"] .hero-content h2 { direction: rtl; }
+
+.hero-content p { color: #94a3b8; font-size: 1.5rem; max-width: 700px; font-weight: 400; text-shadow: 0 10px 20px rgba(0,0,0,0.9); transition: color 0.5s; position: relative; }
+.hero-content p:hover { color: #fff; transform: scale(1.02); }
+
+.hero-content h2 span { background: linear-gradient(90deg, #fff, var(--accent1), var(--accent2), #fff); background-size: 300% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 5s linear infinite; position: relative; display: inline-block; filter: drop-shadow(0 0 10px rgba(56,189,248,0.3));}
+@keyframes textShine { to { background-position: 300% center; } }
+
+/* ELITE SKILLS SECTION */
+section.standard{padding:140px 8%; position:relative; z-index: 5;}
+.section-title{font-size:3.5rem; margin-bottom:70px; text-align:center; background: linear-gradient(to bottom right, #fff 30%, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);}
+.section-title.show { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 35px; max-width: 1100px; margin: 0 auto; perspective: 2000px;}
+.skill-card { background: rgba(15, 23, 42, 0.4); border-radius: 20px; padding: 35px; backdrop-filter: blur(20px); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.4); transform-style: preserve-3d;}
+.skill-card::after { content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 2px; background: linear-gradient(135deg, var(--accent1), transparent, var(--accent2)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.6s ease; z-index: 1; pointer-events: none;}
+.skill-card:hover::after { opacity: 1; }
+
+.skill-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; z-index: 2; transform: translateZ(40px); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);}
+.skill-info h3 { color: #e2e8f0; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; transition: 0.4s; }
+.skill-card:hover .skill-info h3 { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5);}
+.skill-percent { color: var(--accent1); font-weight: 900; font-size: 1.4rem; transition: 0.4s;}
+.skill-card:hover .skill-percent { color: #fff; text-shadow: 0 0 25px var(--accent1); }
+.skill-card:hover .skill-info { transform: translateZ(60px) scale(1.05); }
+
+.progress-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; position: relative; z-index: 2; transform: translateZ(40px); transition: transform 0.4s;}
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent2), var(--accent1)); border-radius: 10px; position: relative; transition: width 2.5s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 0 15px var(--accent1);}
+.progress-fill::after { content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%) scale(0); width: 16px; height: 16px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px var(--accent1), 0 0 40px var(--accent2); transition: transform 0.5s 2s; z-index: 3;}
+.skill-card:hover .progress-fill::after { transform: translateY(-50%) scale(1.2); }
+.skill-card:hover .progress-bg { transform: translateZ(50px); }
+
+/* PROJECTS SECTION */
+.projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 45px; perspective: 2500px; }
+.project-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; backdrop-filter: blur(20px); transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.6s ease; position: relative;}
+.project-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; mix-blend-mode: overlay; z-index: 10;}
+.project-card:hover::after { opacity: 1; }
+
+.project-img { width: 100%; height: 260px; overflow: hidden; position: relative; transform: translateZ(40px); border-bottom: 1px solid rgba(255,255,255,0.05); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);}
+.project-img::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(2,6,23,0.95)); z-index: 1; opacity: 0.8; transition: 0.6s; }
+.project-card:hover .project-img::before { opacity: 0.2; }
+.project-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 1s; filter: grayscale(40%); }
+.project-card:hover .project-img img { transform: scale(1.18) rotate(2deg); filter: grayscale(0%); }
+.project-card:hover .project-img { transform: translateZ(70px); }
+
+.project-info { padding: 35px; text-align: left; background: transparent; position: relative; z-index: 2; transform: translateZ(60px); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+[dir="rtl"] .project-info { text-align: right; }
+.project-info h3 { color: #fff; font-size: 1.7rem; margin-bottom: 15px; font-weight: 800; transition: 0.4s; position: relative; display: inline-block;}
+.project-info h3::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px; background: var(--accent1); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 0 10px var(--accent1);}
+[dir="rtl"] .project-info h3::after { right: 0; left: auto; }
+.project-card:hover .project-info h3 { color: var(--accent1); text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: translateX(5px);}
+[dir="rtl"] .project-card:hover .project-info h3 { transform: translateX(-5px); }
+.project-card:hover .project-info h3::after { width: 100%; }
+.project-info p { color: #94a3b8; font-size: 1.05rem; line-height: 1.7; transition: 0.4s;}
+.project-card:hover .project-info p { color: #e2e8f0; }
+.project-card:hover .project-info { transform: translateZ(90px); }
+
+/* CONTACT */
+.contact-grid {display:flex;flex-direction:column;gap:25px;max-width:750px;margin:0 auto; perspective: 2000px;}
+.contact-card {background:var(--card);border:1px solid var(--border);border-radius:20px;padding:30px 35px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(15px);transition:transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease; position: relative; overflow: hidden; transform-style: preserve-3d;}
+
+.contact-left {display:flex;align-items:center;gap:25px; position: relative; z-index: 1; transform: translateZ(30px); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);}
+.contact-icon {font-size:1.8rem;background:rgba(255,255,255,0.03);width:65px;height:65px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--border); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative;}
+.contact-icon::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; background: conic-gradient(from 0deg, transparent, var(--accent1), transparent); opacity: 0; transition: 0.5s; animation: spinGlow 2s linear infinite; z-index: -1;}
+.contact-card:hover .contact-icon { background: rgba(56, 189, 248, 0.15); color: #fff; border-color: transparent; transform: scale(1.2) rotate(10deg); box-shadow: inset 0 0 20px rgba(56,189,248,0.4);}
+.contact-card:hover .contact-icon::after { opacity: 1; }
+
+.contact-info {text-align:start;}
+.contact-info h3 {font-size:1.2rem;color:#e2e8f0;margin-bottom:6px; font-weight: 700; transition: 0.3s;}
+.contact-card:hover .contact-info h3 { color: #fff; transform: translateY(-2px);}
+.contact-info p {color:#94a3b8;font-size:1rem; transition: 0.3s;}
+
+.action-btn {padding:14px 30px;border-radius:30px;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;text-decoration:none;font-weight:700;font-size:0.95rem;transition:all 0.5s cubic-bezier(0.16, 1, 0.3, 1);border:none;box-shadow:0 10px 25px rgba(56, 189, 248, 0.3);white-space:nowrap; position: relative; overflow: hidden; z-index: 1; letter-spacing: 0.5px; transform: translateZ(30px);}
+.action-btn::before {content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transform: skewX(-25deg); transition: 0s;}
+.action-btn:hover::before { left: 200%; transition: 0.8s ease-in-out; }
+
+.contact-card:hover .contact-left { transform: translateZ(60px); }
+.contact-card:hover .action-btn { transform: translateZ(70px) scale(1.1); box-shadow:0 20px 50px rgba(99, 102, 241, 0.7); filter: brightness(1.15);}
+
+footer{text-align:center;padding:50px;color:#64748b; border-top: 1px solid rgba(255,255,255,0.05); font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; transition: color 0.4s;}
+footer:hover { color: #fff; }
+
+/* APPLE-STYLE CINEMATIC REVEAL */
+.hidden { opacity: 0; filter: blur(20px); transform: translateY(100px) scale(0.9) rotateX(-15deg); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: center bottom; will-change: opacity, transform, filter; }
+.show { opacity: 1; filter: blur(0); transform: translateY(0) scale(1) rotateX(0); }
+
+/* FLOATING CHAT BUTTON & MODAL */
+.chat-wrapper { position: fixed; bottom: 40px; right: 40px; z-index: 10000; perspective: 1000px;}
+[dir="rtl"] .chat-wrapper { right: auto; left: 40px; }
+.chat-btn { width: 75px; height: 75px; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; text-decoration: none; box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; border: none; transform-style: preserve-3d; animation: floatBtn 4s ease-in-out infinite;}
+@keyframes floatBtn { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.chat-btn::before, .chat-btn::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; border: 2px solid var(--accent1); animation: chatPulseRing 2.5s cubic-bezier(0.16, 1, 0.3, 1) infinite; z-index: -1; }
+.chat-btn::after { animation-delay: 1.25s; border-color: var(--accent2); }
+.chat-btn:hover { transform: scale(1.15) rotate(-15deg) translateZ(30px); box-shadow: 0 25px 60px rgba(99, 102, 241, 0.8); animation: none;}
+@keyframes chatPulseRing { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+/* Chat Modal */
+.chat-modal-overlay { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 30px; opacity: 0; pointer-events: none; transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(0px); }
+.chat-modal-overlay.active { opacity: 1; pointer-events: all; backdrop-filter: blur(25px); }
+
+.chat-bg-anim { position: absolute; inset: 0; background: rgba(2, 6, 23, 0.85); overflow: hidden; z-index: -1; }
+.chat-orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.5; animation: drift 20s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95); mix-blend-mode: screen;}
+.orb-1 { width: 600px; height: 600px; background: rgba(56, 189, 248, 0.5); top: -10%; left: -10%; }
+.orb-2 { width: 700px; height: 700px; background: rgba(99, 102, 241, 0.4); bottom: -20%; right: -10%; animation-delay: -10s; }
+
+.chat-window { width: 100%; max-width: 1100px; height: 90vh; background: rgba(6, 11, 25, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; backdrop-filter: blur(60px); box-shadow: 0 50px 150px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(255,255,255,0.03); display: flex; flex-direction: column; overflow: hidden; transform: translateY(150px) scale(0.85) rotateX(-15deg); opacity: 0; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: bottom center;}
+.chat-modal-overlay.active .chat-window { transform: translateY(0) scale(1) rotateX(0deg); opacity: 1; }
+
+.chat-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 35px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent); }
+.chat-header-info { display: flex; align-items: center; gap: 18px; }
+.chat-header-info img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent1); box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); padding: 2px; background: #000; transition: transform 0.5s;}
+.chat-header-info:hover img { transform: scale(1.1) rotate(10deg); }
+.chat-header-info h3 { font-size: 1.3rem; font-weight: 800; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;}
+.chat-header-info p { font-size: 0.9rem; color: var(--accent1); display: flex; align-items: center; gap: 6px; font-weight: 600;}
+.chat-header-info p::before { content: ''; width: 8px; height: 8px; background: var(--accent1); border-radius: 50%; box-shadow: 0 0 15px var(--accent1); animation: blink 2s infinite cubic-bezier(0.16, 1, 0.3, 1);}
+
+.chat-header-actions { display: flex; gap: 15px; }
+.chat-action-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: #94a3b8; width: 45px; height: 45px; border-radius: 50%; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(10px);}
+.btn-minimize:hover { background: rgba(56, 189, 248, 0.15); color: #fff; border-color: var(--accent1); transform: scale(1.2) translateY(-3px); box-shadow: 0 15px 30px rgba(56,189,248,0.3); }
+.btn-close:hover { background: rgba(239, 68, 68, 0.15); color: #fff; border-color: var(--danger); transform: rotate(90deg) scale(1.2); box-shadow: 0 15px 30px rgba(239,68,68,0.3);}
+
+.chat-body { flex: 1; padding: 35px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; scroll-behavior: smooth; }
+.chat-body::-webkit-scrollbar { width: 8px; }
+.chat-body::-webkit-scrollbar-track { background: transparent; }
+.chat-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; border: 2px solid rgba(6, 11, 25, 0.8);}
+.chat-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+.suggestions-container { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; margin-bottom: 25px; animation: msgFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.suggested-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(56, 189, 248, 0.25); color: #e2e8f0; padding: 14px 22px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; backdrop-filter: blur(10px); }
+.suggested-btn::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 50%); opacity: 0; transition: 0.5s; transform: scale(0.5); z-index: 0; pointer-events: none;}
+.suggested-btn span { position: relative; z-index: 1; }
+.suggested-btn:hover::after { opacity: 1; transform: scale(1); }
+.suggested-btn:hover { transform: translateY(-5px) scale(1.05); border-color: var(--accent1); color: #fff; box-shadow: 0 15px 35px rgba(56, 189, 248, 0.3); }
+
+.message { display: flex; gap: 18px; max-width: 82%; animation: msgFadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px) scale(0.95); transform-origin: bottom left;}
+[dir="rtl"] .message { transform-origin: bottom right; }
+@keyframes msgFadeIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+.message.bot { align-self: flex-start; }
+.message.user { align-self: flex-end; flex-direction: row-reverse; transform-origin: bottom right;}
+[dir="rtl"] .message.bot { align-self: flex-start; }
+[dir="rtl"] .message.user { align-self: flex-end; flex-direction: row-reverse; transform-origin: bottom left;}
+
+.message img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.2);}
+.message.user img { background: linear-gradient(135deg, var(--accent1), var(--accent2)); padding: 8px; border: none;}
+.msg-bubble { padding: 18px 25px; border-radius: 24px; font-size: 1.05rem; line-height: 1.7; color: #e2e8f0; transition: 0.4s; position: relative;}
+
+.message.bot .msg-bubble { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-top-left-radius: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); backdrop-filter: blur(15px);}
+[dir="rtl"] .message.bot .msg-bubble { border-top-left-radius: 24px; border-top-right-radius: 6px; }
+
+.message.user .msg-bubble { background: linear-gradient(135deg, var(--accent2), var(--accent1)); border-top-right-radius: 6px; color: white; box-shadow: 0 25px 50px rgba(99, 102, 241, 0.5); text-shadow: 0 2px 4px rgba(0,0,0,0.3);}
+[dir="rtl"] .message.user .msg-bubble { border-top-right-radius: 24px; border-top-left-radius: 6px; background: linear-gradient(-135deg, var(--accent2), var(--accent1));}
+
+.typing-indicator { display: flex; gap: 6px; padding: 12px 0; }
+.typing-indicator span { width: 8px; height: 8px; background: var(--accent1); border-radius: 50%; animation: typingBounce 1.4s infinite cubic-bezier(0.16, 1, 0.3, 1) both; box-shadow: 0 0 20px var(--accent1);}
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); opacity: 0.3;} 40% { transform: scale(1.3); opacity: 1;} }
+
+/* CUSTOM LUXURY CONFIRM MODAL */
+.confirm-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(25px); z-index: 1000001; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); perspective: 1000px;}
+.confirm-modal-overlay.active { opacity: 1; pointer-events: all; }
+.confirm-box { background: rgba(10, 15, 35, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 60px 45px; max-width: 480px; text-align: center; box-shadow: 0 60px 150px rgba(0,0,0,1), inset 0 0 50px rgba(255,255,255,0.05); transform: scale(0.8) translateY(60px) rotateX(15deg); opacity: 0; transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;}
+.confirm-box::before {content:''; position:absolute; top:0; left:0; width:100%; height:5px; background: linear-gradient(90deg, transparent, var(--danger), transparent);}
+.confirm-modal-overlay.active .confirm-box { transform: scale(1) translateY(0) rotateX(0); opacity: 1; }
+.confirm-icon { font-size: 4.5rem; color: var(--danger); margin-bottom: 30px; text-shadow: 0 0 50px rgba(239, 68, 68, 0.8); animation: warningPulse 2.5s infinite cubic-bezier(0.16, 1, 0.3, 1) alternate; }
+@keyframes warningPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 80px rgba(239, 68, 68, 1); } }
+.confirm-title { font-size: 2rem; color: #fff; margin-bottom: 18px; font-weight: 800; letter-spacing: -1px; }
+.confirm-text { color: #94a3b8; font-size: 1.1rem; line-height: 1.7; margin-bottom: 45px; }
+.confirm-actions { display: flex; gap: 20px; justify-content: center; }
+.confirm-btn { padding: 16px 32px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); border: none; cursor: none; letter-spacing: 0.5px;}
+.btn-cancel { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.15); }
+.btn-cancel:hover { background: rgba(255, 255, 255, 0.15); color: #fff; transform: translateY(-5px) scale(1.08); box-shadow: 0 15px 35px rgba(255,255,255,0.1);}
+.btn-wipe { background: linear-gradient(135deg, #ef4444, #991b1b); color: white; box-shadow: 0 15px 35px rgba(239, 68, 68, 0.5); }
+.btn-wipe:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 25px 60px rgba(239, 68, 68, 0.8); filter: brightness(1.2);}
+
+@media (max-width: 600px) {
+  header { padding: 15px 5%; }
+  .lang-menu { margin-inline-start: 15px; }
+  .chat-wrapper { bottom: 25px; right: 25px; }
+  [dir="rtl"] .chat-wrapper { left: 25px; right: auto; }
+  .chat-btn { width: 65px; height: 65px; font-size: 28px; }
+  .chat-modal-overlay { padding: 10px; }
+  .chat-window { height: 95vh; border-radius: 20px; }
+  .chat-header { padding: 18px 20px; }
+  .chat-body { padding: 20px; }
+  .msg-bubble { padding: 14px 18px; font-size: 1rem; }
+  .suggested-btn { padding: 12px 18px; font-size: 0.85rem; }
+  .projects { grid-template-columns: 1fr; }
+  .confirm-box { padding: 40px 25px; }
+  .confirm-actions { flex-direction: column; gap: 15px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader"><span></span></div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<header>
+  <a href="#" style="cursor: none;">
+      <img src="Artiva_images/artiva_not_background.png" alt="Artiva Logo" class="header-logo">
+  </a>
+  
+  <nav>
+    <a href="#" class="nav-link" data-i18n="nav_home">Home</a>
+    <a href="#skills" class="nav-link" data-i18n="nav_skills">Skills</a>
+    <a href="#projects" class="nav-link" data-i18n="nav_projects">Projects</a>
+    <a href="#contact" class="nav-link" data-i18n="nav_contact">Contact</a>
+    
+    <div class="lang-menu" id="langMenu">
+      <button class="lang-btn" id="langBtn">
+          <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 0.8rem; margin-inline-start: 5px;"></i>
+      </button>
+      <div class="lang-dropdown">
+          <button onclick="changeLanguage('en')"><img src="https://cdn-icons-png.flaticon.com/512/197/197374.png" width="20" alt="EN"> English</button>
+          <button onclick="changeLanguage('fr')"><img src="https://cdn-icons-png.flaticon.com/512/197/197560.png" width="20" alt="FR"> Français</button>
+          <button onclick="changeLanguage('es')"><img src="https://cdn-icons-png.flaticon.com/512/197/197593.png" width="20" alt="ES"> Español</button>
+          <button onclick="changeLanguage('ar')"><img src="https://cdn-icons-png.flaticon.com/512/197/197558.png" width="20" alt="AR"> العربية</button>
+          <button onclick="changeLanguage('zh')"><img src="https://cdn-icons-png.flaticon.com/512/197/197375.png" width="20" alt="ZH"> 中文</button>
+          <button onclick="changeLanguage('de')"><img src="https://cdn-icons-png.flaticon.com/512/197/197571.png" width="20" alt="DE"> Deutsch</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="hero-flow">
+  <div class="flow-grid" id="parallaxGrid">
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item empty-item"></div>
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item empty-item"></div>
+    <div class="flow-item empty-item"></div>
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item empty-item"></div>
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item"><video src="Artiva_images/Artiva_video.mp4" autoplay loop muted playsinline></video></div>
+    <div class="flow-item empty-item"></div>
+  </div>
+  <div class="hero-shadows"></div>
+  
+  <div class="hero-content hidden" id="heroContent">
+    <h2 data-i18n-html="hero_title">Hello we are <span>Artiva Sketch</span><br>Elite Developer</h2>  
+    <p data-i18n="hero_desc">we create ultra-premium digital experiences with cinematic animations.</p>
+    <div class="fog-cursor" id="fogCursor"></div>
+  </div>
+</section>
+
+<section id="skills" class="standard">
+  <h2 class="section-title hidden" data-i18n="skills_title">My Expertise</h2>
+  <div class="skills-grid">
+    <div class="skill-card hidden dynamic-glare">
+      <div class="skill-info"><h3>HTML5</h3><span class="skill-percent">89%</span></div>
+      <div class="progress-bg"><div class="progress-fill" data-width="89%"></div></div>
+    </div>
+    <div class="skill-card hidden dynamic-glare">
+      <div class="skill-info"><h3>Python</h3><span class="skill-percent">80%</span></div>
+      <div class="progress-bg"><div class="progress-fill" data-width="80%"></div></div>
+    </div>
+    <div class="skill-card hidden dynamic-glare">
+      <div class="skill-info"><h3>CSS3 / Tailwind</h3><span class="skill-percent">60%</span></div>
+      <div class="progress-bg"><div class="progress-fill" data-width="60%"></div></div>
+    </div>
+    <div class="skill-card hidden dynamic-glare">
+      <div class="skill-info"><h3>JavaScript</h3><span class="skill-percent">50%</span></div>
+      <div class="progress-bg"><div class="progress-fill" data-width="50%"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="standard">
+  <h2 class="section-title hidden" data-i18n="projects_title">Masterpiece Projects</h2>
+  <div class="projects">
+    <a href="https://www.horis.studio/" target="_blank" class="project-card hidden dynamic-glare">
+      <div class="project-img"><img src="Artiva_images/Horis_capture.png" alt="Horis ArchiDesign"></div>
+      <div class="project-info">
+        <h3 data-i18n="proj1_title">Horis ArchiDesign</h3>
+        <p data-i18n="proj1_desc">An ultra-premium architectural design studio featuring a cinematic visual experience and luxurious interface.</p>
+      </div>
+    </a>
+    <a href="https://yacine-x-coder.github.io/index.html/" target="_blank" class="project-card hidden dynamic-glare">
+      <div class="project-img"><img src="Artiva_images/oasis_caoture.png" alt="L'oasis Rouge"></div>
+      <div class="project-info">
+        <h3 data-i18n="proj2_title">L'oasis Rouge</h3>
+        <p data-i18n="proj2_desc">A luxurious and refreshing digital showcase designed for a premium beverage brand, built with flawless performance.</p>
+      </div>
+    </a>
+    <a href="https://yacine-x-coder.github.io/portfolio/" target="_blank" class="project-card hidden dynamic-glare">
+      <div class="project-img"><img src="Artiva_images/yacine_capture.png" alt="Yacine Portfolio"></div>
+      <div class="project-info">
+        <h3 data-i18n="proj3_title">Elite Dev Portfolio</h3>
+        <p data-i18n="proj3_desc">A digital masterpiece defining the future of Senior Frontend Development and cutting-edge UI/UX design.</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section id="contact" class="standard">
+  <h2 class="section-title hidden" data-i18n="contact_title">Get In Touch</h2>
+  <div class="contact-grid">
+    <div class="contact-card hidden dynamic-glare">
+      <div class="contact-left"><div class="contact-icon">📄</div><div class="contact-info"><h3 data-i18n="contact_cv">Resume / CV</h3><p data-i18n="contact_cv_desc">Download my full portfolio details</p></div></div>
+      <a href="#" id="downloadCvBtn" class="action-btn" data-i18n="contact_cv_btn">Download resume</a>
+    </div>
+    <div class="contact-card hidden dynamic-glare">
+      <div class="contact-left"><div class="contact-icon">✉️</div><div class="contact-info"><h3 data-i18n="contact_email">Email</h3><p>eurlprodam@gmail.com</p></div></div>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eurlprodam@gmail.com" target="_blank" rel="noopener noreferrer" class="action-btn" data-i18n="contact_email_btn">Send in Gmail</a>
+    </div>
+    <div class="contact-card hidden dynamic-glare">
+      <div class="contact-left"><div class="contact-icon">📞</div><div class="contact-info"><h3 data-i18n="contact_phone">Phone</h3><p>+213 662 62 70 69</p></div></div>
+      <a href="tel:+213662627069" class="action-btn" data-i18n="contact_phone_btn">Call</a>
+    </div>
+    <div class="contact-card hidden dynamic-glare">
+      <div class="contact-left"><div class="contact-icon">📍</div><div class="contact-info"><h3 data-i18n="contact_loc">Location</h3><p data-i18n="contact_loc_desc">Bentalha, Algiers, Algeria</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="hidden" data-i18n="footer">© 2026 - Artiva<br>By Yacine</footer>
+
+<div class="chat-wrapper">
+    <button class="chat-btn" id="openChatBtn" title="Chat with Artiva AI"><i class="fas fa-comment-dots"></i></button>
+</div>
+
+<div class="chat-modal-overlay" id="chatOverlay">
+    <div class="chat-bg-anim"><div class="chat-orb orb-1"></div><div class="chat-orb orb-2"></div></div>
+    <div class="chat-window">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <img src="Artiva_images/artiva_not_background.png" alt="Artiva AI">
+                <div><h3>Artiva AI</h3><p data-i18n="chat_status">Online & Ready</p></div>
+            </div>
+            <div class="chat-header-actions">
+                <button class="chat-action-btn btn-minimize" id="minimizeChatBtn"><i class="fas fa-minus"></i></button>
+                <button class="chat-action-btn btn-close" id="closeChatBtn"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="message bot" id="initialBotMsg">
+                <img src="Artiva_images/artiva_not_background.png" alt="Bot">
+                <div class="msg-bubble" data-i18n="chat_greeting">Hello! I am Artiva, Yacine's personal AI assistant. Click on any question below to learn more about him and his elite work!</div>
+            </div>
+            <div class="suggestions-container" id="suggestionsBox"></div>
+        </div>
+    </div>
+</div>
+
+<div class="confirm-modal-overlay" id="customConfirmModal">
+    <div class="confirm-box">
+        <div class="confirm-icon"><i class="fas fa-power-off"></i></div>
+        <h3 class="confirm-title" data-i18n="modal_title">Terminate Session?</h3>
+        <p class="confirm-text" data-i18n="modal_desc">Are you sure you wish to disconnect? This action will permanently erase our current conversation history and reset the AI.</p>
+        <div class="confirm-actions">
+            <button class="confirm-btn btn-cancel" id="cancelWipeBtn" data-i18n="modal_keep">Keep Chatting</button>
+            <button class="confirm-btn btn-wipe" id="confirmWipeBtn" data-i18n="modal_wipe">Terminate & Reset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* LOADER */
+window.addEventListener('load',()=>{ 
+    const loader = document.querySelector('.loader');
+    loader.style.opacity = '0';
+    setTimeout(() => {
+        loader.style.visibility = 'hidden';
+        document.querySelector('.hero-content').classList.add('show'); 
+    }, 1200);
+});
+
+window.addEventListener('scroll',()=>{ document.querySelector('header').classList.toggle('scrolled',window.scrollY>50) });
+
+/* Staggering Reveal Observer */
+const observerOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+const observer = new IntersectionObserver(entries => { 
+    entries.forEach(entry => {
+        if(entry.isIntersecting){
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target); 
+        }
+    }) 
+}, observerOptions);
+
+document.querySelectorAll('.skills-grid, .projects, .contact-grid').forEach(grid => {
+    Array.from(grid.querySelectorAll('.hidden')).forEach((child, index) => {
+        child.style.transitionDelay = `${index * 0.15}s`;
+    });
+});
+document.querySelectorAll('.hidden, .section-title').forEach(el=>observer.observe(el));
+
+/* SKILLS PROGRESS BAR ANIMATION */
+const skillObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        const fills = entry.target.querySelectorAll('.progress-fill');
+        if(entry.isIntersecting) { 
+            fills.forEach((fill, index) => { 
+                setTimeout(() => { fill.style.width = fill.getAttribute('data-width'); }, index * 250);
+            }); 
+            skillObserver.unobserve(entry.target);
+        } 
+    });
+}, { threshold: 0.4 });
+document.querySelectorAll('#skills').forEach(sec => skillObserver.observe(sec));
+
+/* PRO CURSOR & GLOBAL MOUSE TRACKING */
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+const parallaxGrid = document.getElementById('parallaxGrid');
+
+let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2, ringX = mouseX, ringY = mouseY;
+
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  dot.style.left = `${mouseX}px`; dot.style.top = `${mouseY}px`;
+
+  const xOffset = (mouseX / window.innerWidth - 0.5) * 40; 
+  const yOffset = (mouseY / window.innerHeight - 0.5) * 40;
+  parallaxGrid.style.transform = `translate(${-xOffset}px, ${-yOffset}px) rotate(-5deg) scale(1.1) translateZ(-100px)`;
+});
+
+/* ربط العدسة الضبابية بحركة الماوس */
+const heroContent = document.getElementById('heroContent');
+const fogCursor = document.getElementById('fogCursor');
+if(heroContent && fogCursor) {
+    heroContent.addEventListener('mousemove', (e) => {
+        const rect = heroContent.getBoundingClientRect();
+        fogCursor.style.setProperty('--fog-x', `${e.clientX - rect.left}px`);
+        fogCursor.style.setProperty('--fog-y', `${e.clientY - rect.top}px`);
+    });
+}
+
+function animateCursorRing() {
+  ringX += (mouseX - ringX) * 0.12; 
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = `${ringX}px`; ring.style.top = `${ringY}px`;
+  requestAnimationFrame(animateCursorRing);
+}
+animateCursorRing();
+
+function applyCursorHover() {
+    document.querySelectorAll('a, button, .card, .contact-card, .action-btn, .suggested-btn, .project-card, .chat-action-btn, .confirm-btn, .lang-btn, .lang-dropdown button, .skill-card').forEach(el=>{
+        el.addEventListener('mouseenter', () => {
+            ring.classList.add('hovered');
+            if(el.classList.contains('btn-close') || el.classList.contains('btn-wipe')) { ring.classList.add('danger-hover'); }
+        });
+        el.addEventListener('mouseleave', () => { ring.classList.remove('hovered'); ring.classList.remove('danger-hover'); });
+    });
+}
+applyCursorHover();
+
+/* DYNAMIC GLARE & UNIVERSAL 3D TILT ENGINE */
+const dynamicCards = document.querySelectorAll('.dynamic-glare');
+dynamicCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -15; 
+        const rotateY = ((x - centerX) / centerX) * 15;
+        
+        card.style.transition = 'transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease';
+        card.style.transform = `perspective(2000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        card.style.borderColor = 'rgba(56, 189, 248, 0.8)';
+        card.style.boxShadow = `0 50px 100px rgba(0,0,0,0.9), 0 0 60px rgba(56, 189, 248, 0.4), inset 0 0 30px rgba(255,255,255,0.1)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s ease, border-color 0.8s ease';
+        card.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        card.style.borderColor = 'var(--border)';
+        card.style.boxShadow = 'none';
+    });
+});
+
+/* LUXURY TRANSLATION ENGINE (i18n) */
+const dict = {
+    en: {
+        nav_home: "Home", nav_skills: "Skills", nav_projects: "Projects", nav_contact: "Contact",
+        hero_title: "Hello we are <span>Artiva Sketch</span><br>Elite Developer",
+        hero_desc: "We create ultra-premium digital experiences with cinematic animations.",
+        skills_title: "My Expertise", projects_title: "Masterpiece Projects",
+        proj1_title: "Horis ArchiDesign", proj1_desc: "An ultra-premium architectural design studio featuring a cinematic visual experience and luxurious interface.",
+        proj2_title: "L'oasis Rouge", proj2_desc: "A luxurious and refreshing digital showcase designed for a premium beverage brand, built with flawless performance.",
+        proj3_title: "Elite Dev Portfolio", proj3_desc: "A digital masterpiece defining the future of Senior Frontend Development and cutting-edge UI/UX design.",
+        contact_title: "Get In Touch",
+        contact_cv: "Resume / CV", contact_cv_desc: "Download my full portfolio details", contact_cv_btn: "Download resume",
+        contact_email: "Email", contact_email_btn: "Send in Gmail", contact_phone: "Phone", contact_phone_btn: "Call",
+        contact_loc: "Location", contact_loc_desc: "Bentalha, Algiers, Algeria", footer: "© 2026 - Artiva<br>By Yacine",
+        chat_status: "Online & Ready", chat_greeting: "Hello! I am Artiva, Yacine's personal AI assistant. Click on any question below to learn more about him and his elite work!",
+        modal_title: "Terminate Session?", modal_desc: "Are you sure you wish to disconnect? This action will permanently erase our current conversation history and reset the AI.", modal_keep: "Keep Chatting", modal_wipe: "Terminate & Reset"
+    },
+    fr: {
+        nav_home: "Accueil", nav_skills: "Compétences", nav_projects: "Projets", nav_contact: "Contact",
+        hero_title: "Bonjour, nous sommes <span>Artiva Sketch</span><br>Développeur d'Élite",
+        hero_desc: "Nous créons des expériences numériques ultra-premium avec des animations cinématiques.",
+        skills_title: "Mon Expertise", projects_title: "Projets Chefs-d'œuvre",
+        proj1_title: "Horis ArchiDesign", proj1_desc: "Un studio de design architectural ultra-premium offrant une expérience visuelle cinématique et une interface luxueuse.",
+        proj2_title: "L'oasis Rouge", proj2_desc: "Une vitrine numérique luxueuse et rafraîchissante conçue pour une marque de boisson premium.",
+        proj3_title: "Portfolio Dev d'Élite", proj3_desc: "Un chef-d'œuvre numérique définissant l'avenir du développement Frontend Senior et du design UI/UX.",
+        contact_title: "Contactez-nous", contact_cv: "Curriculum Vitae", contact_cv_desc: "Téléchargez les détails de mon portfolio", contact_cv_btn: "Télécharger CV",
+        contact_email: "E-mail", contact_email_btn: "Envoyer via Gmail", contact_phone: "Téléphone", contact_phone_btn: "Appeler",
+        contact_loc: "Adresse", contact_loc_desc: "Bentalha, Alger, Algérie", footer: "© 2026 - Artiva<br>Par Yacine",
+        chat_status: "En ligne & Prêt", chat_greeting: "Bonjour ! Je suis Artiva, l'assistant IA de Yacine. Cliquez sur une question ci-dessous pour en savoir plus sur son travail d'élite !",
+        modal_title: "Terminer la session ?", modal_desc: "Êtes-vous sûr de vouloir vous déconnecter ? Cette action effacera définitivement notre historique de conversation.", modal_keep: "Continuer", modal_wipe: "Terminer & Réinitialiser"
+    },
+    ar: {
+        nav_home: "الرئيسية", nav_skills: "المهارات", nav_projects: "المشاريع", nav_contact: "تواصل معنا",
+        hero_title: "مرحباً، نحن <span>Artiva Sketch</span><br>مطور نخبة",
+        hero_desc: "نحن نصمم تجارب رقمية فائقة الفخامة باستخدام حركات سينمائية مذهلة.",
+        skills_title: "خبراتي التقنية", projects_title: "أفضل المشاريع",
+        proj1_title: "Horis ArchiDesign", proj1_desc: "استوديو تصميم معماري فائق الفخامة يتميز بتجربة بصرية سينمائية وواجهة مستخدم راقية.",
+        proj2_title: "L'oasis Rouge", proj2_desc: "واجهة رقمية فاخرة ومنعشة مصممة لعلامة تجارية للمشروبات، مبنية بأداء لا تشوبه شائبة.",
+        proj3_title: "معرض أعمال النخبة", proj3_desc: "تحفة رقمية ترسم مستقبل تطوير الواجهات (Frontend) وأحدث تصاميم واجهة المستخدم.",
+        contact_title: "تواصل معنا", contact_cv: "السيرة الذاتية", contact_cv_desc: "قم بتحميل تفاصيل أعمالي الكاملة", contact_cv_btn: "تحميل السيرة",
+        contact_email: "البريد الإلكتروني", contact_email_btn: "إرسال عبر Gmail", contact_phone: "رقم الهاتف", contact_phone_btn: "اتصال",
+        contact_loc: "الموقع", contact_loc_desc: "بن طلحة، الجزائر العاصمة، الجزائر", footer: "© 2026 - Artiva<br>بواسطة ياسين",
+        chat_status: "متصل وجاهز", chat_greeting: "مرحباً! أنا أرتيفا، مساعد ياسين الشخصي. اضغط على أي سؤال بالأسفل لمعرفة المزيد عن أعماله الاحترافية!",
+        modal_title: "إنهاء الجلسة؟", modal_desc: "هل أنت متأكد أنك ترغب في قطع الاتصال؟ سيؤدي هذا الإجراء إلى محو سجل محادثتنا الحالي بشكل دائم.", modal_keep: "مواصلة الدردشة", modal_wipe: "إنهاء ومسح"
+    },
+    es: {
+        nav_home: "Inicio", nav_skills: "Habilidades", nav_projects: "Proyectos", nav_contact: "Contacto",
+        hero_title: "Hola, somos <span>Artiva Sketch</span><br>Desarrollador de Élite",
+        hero_desc: "Creamos experiencias digitales ultra premium con animaciones cinematográficas.",
+        skills_title: "Mi Experiencia", projects_title: "Proyectos Maestros",
+        proj1_title: "Horis ArchiDesign", proj1_desc: "Un estudio de diseño arquitectónico ultra premium con una experiencia visual cinematográfica y una interfaz lujosa.",
+        proj2_title: "L'oasis Rouge", proj2_desc: "Un escaparate digital lujoso y refrescante diseñado para una marca de bebidas premium.",
+        proj3_title: "Portfolio Dev de Élite", proj3_desc: "Una obra maestra digital que define el futuro del Desarrollo Frontend Senior y el diseño UI/UX de vanguardia.",
+        contact_title: "Ponte en Contacto", contact_cv: "Currículum", contact_cv_desc: "Descarga los detalles completos de mi portfolio", contact_cv_btn: "Descargar CV",
+        contact_email: "Correo", contact_email_btn: "Enviar por Gmail", contact_phone: "Teléfono", contact_phone_btn: "Llamar",
+        contact_loc: "Ubicación", contact_loc_desc: "Bentalha, Argel, Argelia", footer: "© 2026 - Artiva<br>Por Yacine",
+        chat_status: "En línea y listo", chat_greeting: "¡Hola! Soy Artiva, el asistente de IA de Yacine. Haz clic en cualquier pregunta para saber más sobre su trabajo de élite.",
+        modal_title: "¿Terminar Sesión?", modal_desc: "¿Seguro que deseas desconectarte? Esta acción borrará permanentemente nuestro historial de conversación actual.", modal_keep: "Seguir Chateando", modal_wipe: "Terminar y Reiniciar"
+    },
+    zh: {
+        nav_home: "首页", nav_skills: "技能", nav_projects: "项目", nav_contact: "联系我们",
+        hero_title: "你好，我们是 <span>Artiva Sketch</span><br>精英开发者",
+        hero_desc: "我们创造具有电影级动画的超高端数字体验。",
+        skills_title: "我的专长", projects_title: "杰作项目",
+        proj1_title: "Horis ArchiDesign", proj1_desc: "一个超高端的建筑设计工作室，提供电影级的视觉体验和豪华的界面。",
+        proj2_title: "L'oasis Rouge", proj2_desc: "为高级饮料品牌设计的豪华而清新的数字展示，性能完美无瑕。",
+        proj3_title: "精英开发者作品集", proj3_desc: "一件定义了高级前端开发和尖端 UI/UX 设计未来的数字杰作。",
+        contact_title: "联系我们", contact_cv: "简历 / CV", contact_cv_desc: "下载我完整的作品集详情", contact_cv_btn: "下载简历",
+        contact_email: "电子邮件", contact_email_btn: "通过 Gmail 发送", contact_phone: "电话", contact_phone_btn: "呼叫",
+        contact_loc: "位置", contact_loc_desc: "阿尔及利亚，阿尔及尔，本塔尔哈", footer: "© 2026 - Artiva<br>作者 Yacine",
+        chat_status: "在线 & 准备就绪", chat_greeting: "你好！我是 Artiva，Yacine 的人工智能助手。点击下方问题，了解更多关于他的精英工作！",
+        modal_title: "终止会话？", modal_desc: "您确定要断开连接吗？此操作将永久抹去我们当前的对话记录。", modal_keep: "继续聊天", modal_wipe: "终止并重置"
+    },
+    de: {
+        nav_home: "Startseite", nav_skills: "Fähigkeiten", nav_projects: "Projekte", nav_contact: "Kontakt",
+        hero_title: "Hallo, wir sind <span>Artiva Sketch</span><br>Elite-Entwickler",
+        hero_desc: "Wir schaffen ultra-premium digitale Erlebnisse mit cineastischen Animationen.",
+        skills_title: "Meine Expertise", projects_title: "Meisterwerk-Projekte",
+        proj1_title: "Horis ArchiDesign", proj1_desc: "Ein ultra-premium Architekturbüro mit einem cineastischen visuellen Erlebnis und einer luxuriösen Benutzeroberfläche.",
+        proj2_title: "L'oasis Rouge", proj2_desc: "Ein luxuriöser und erfrischender digitaler Showcase für eine Premium-Getränkemarke, entwickelt mit makelloser Leistung.",
+        proj3_title: "Elite Dev Portfolio", proj3_desc: "Ein digitales Meisterwerk, das die Zukunft der Senior Frontend-Entwicklung und des innovativen UI/UX-Designs definiert.",
+        contact_title: "Nehmen Sie Kontakt auf", contact_cv: "Lebenslauf", contact_cv_desc: "Laden Sie meine vollständigen Portfolio-Details herunter", contact_cv_btn: "Lebenslauf herunterladen",
+        contact_email: "E-Mail", contact_email_btn: "In Gmail senden", contact_phone: "Telefon", contact_phone_btn: "Anrufen",
+        contact_loc: "Standort", contact_loc_desc: "Bentalha, Algier, Algerien", footer: "© 2026 - Artiva<br>Von Yacine",
+        chat_status: "Online & Bereit", chat_greeting: "Hallo! Ich bin Artiva, Yacines KI-Assistent. Klicken Sie auf eine Frage, um mehr über seine elitäre Arbeit zu erfahren!",
+        modal_title: "Sitzung beenden?", modal_desc: "Möchten Sie die Verbindung wirklich trennen? Dadurch wird unser aktueller Gesprächsverlauf dauerhaft gelöscht.", modal_keep: "Weiter chatten", modal_wipe: "Beenden & Zurücksetzen"
+    }
+};
+
+const qaDict = {
+    en: [
+        { q: "Who is Yacine?", a: "Yacine is an 11-year-old Elite Frontend Developer, a future Senior Dev, specializing in ultra-premium digital experiences and cinematic interfaces." },
+        { q: "What technologies do you use?", a: "I master HTML, CSS, JavaScript, and Python. I use them to create immersive web experiences, AI integrations, and advanced interactive UI." },
+        { q: "Tell me about Artiva AI.", a: "Artiva AI is a custom-built digital assistant, designed to showcase Yacine's advanced programming capabilities and modern UI/UX design sense." },
+        { q: "How can I contact you?", a: "You can reach me via email at eurlprodam@gmail.com, or simply call me directly at +213 662 62 70 69." },
+        { q: "Where are you located?", a: "I am based in Bentalha, Algiers, Algeria." },
+        { q: "Can I download your resume?", a: "Yes, absolutely! You can download my full PDF resume directly from the 'Contact' section of this portfolio." },
+        { q: "What is your experience level?", a: "I operate at an elite level for my age, structuring complex layouts, designing luxury UI, and writing clean, scalable code like a future Senior Developer." },
+        { q: "Do you do freelance work?", a: "Yes, I am open to exciting freelance opportunities, custom projects, and high-end web design collaborations." },
+        { q: "What is 'Cinematic UI'?", a: "Cinematic UI refers to the highly immersive, animation-rich, and visually stunning interfaces I build, exactly like the one you are exploring right now!" },
+        { q: "Tell me about your Python projects.", a: "I have developed interactive Python games and advanced AI-powered tools like the 'Python Artiva' image generator." },
+        { q: "Can you build a full website?", a: "Definitely. I can structure, design, and animate fully responsive websites from scratch, ensuring they look perfect on all devices." },
+        { q: "What is your design philosophy?", a: "I believe in merging luxury aesthetics with flawless performance. A website shouldn't just work; it should feel like a premium experience." },
+        { q: "How fast can you deliver a project?", a: "It depends on the complexity of the vision, but I always prioritize top-tier quality and professional, timely delivery." },
+        { q: "Do you work with 3D elements?", a: "Yes! I integrate advanced CSS techniques, WebGL logic, and 3D tilt effects to bring interfaces to life and make them interactive." },
+        { q: "Why should I hire you?", a: "Because I bring a fresh, highly creative perspective. I combine elite coding skills with premium design to make your project stand out from the rest." }
+    ],
+    fr: [
+        { q: "Qui est Yacine ?", a: "Yacine est un Développeur Frontend d'Élite de 11 ans, un futur Senior Dev, spécialisé dans les expériences numériques ultra-premium et les interfaces cinématiques." },
+        { q: "Quelles technologies utilises-tu ?", a: "Je maîtrise HTML, CSS, JavaScript et Python. Je les utilise pour créer des expériences web immersives, des intégrations IA et des interfaces utilisateur interactives." },
+        { q: "Parle-moi d'Artiva AI.", a: "Artiva AI est un assistant numérique personnalisé, conçu pour mettre en valeur les capacités de programmation avancées de Yacine." },
+        { q: "Comment puis-je te contacter ?", a: "Vous pouvez me joindre par e-mail à eurlprodam@gmail.com, ou simplement m'appeler directement au +213 662 62 70 69." },
+        { q: "Où es-tu situé ?", a: "Je suis basé à Bentalha, Alger, Algérie." },
+        { q: "Puis-je télécharger ton CV ?", a: "Oui, absolument ! Vous pouvez télécharger mon CV PDF complet directement depuis la section 'Contact' de ce portfolio." },
+        { q: "Quel est ton niveau d'expérience ?", a: "J'opère à un niveau d'élite pour mon âge, structurant des mises en page complexes et concevant des interfaces utilisateur de luxe." },
+        { q: "Fais-tu du travail en freelance ?", a: "Oui, je suis ouvert à des opportunités de freelance passionnantes, des projets sur mesure et des collaborations en conception web haut de gamme." },
+        { q: "Qu'est-ce que l'UI Cinématique ?", a: "L'UI Cinématique fait référence aux interfaces hautement immersives, riches en animations et visuellement époustouflantes que je construis." },
+        { q: "Parle-moi de tes projets Python.", a: "J'ai développé des jeux Python interactifs et des outils avancés basés sur l'IA comme le générateur d'images 'Python Artiva'." },
+        { q: "Peux-tu créer un site web complet ?", a: "Absolument. Je peux structurer, concevoir et animer des sites web entièrement réactifs à partir de zéro." },
+        { q: "Quelle est ta philosophie de conception ?", a: "Je crois en la fusion de l'esthétique de luxe avec des performances impeccables." },
+        { q: "À quelle vitesse peux-tu livrer un projet ?", a: "Cela dépend de la complexité de la vision, mais je donne toujours la priorité à une qualité supérieure et à une livraison professionnelle." },
+        { q: "Travailles-tu avec des éléments 3D ?", a: "Oui ! J'intègre des techniques CSS avancées, la logique WebGL et des effets d'inclinaison 3D." },
+        { q: "Pourquoi devrais-je t'embaucher ?", a: "Parce que j'apporte une perspective nouvelle et hautement créative, en combinant des compétences de codage d'élite avec un design premium." }
+    ],
+    ar: [
+        { q: "من هو ياسين؟", a: "ياسين هو مطور واجهات أمامية من النخبة يبلغ من العمر 11 عاماً، ومطور أول (Senior Dev) مستقبلي، متخصص في التجارب الرقمية فائقة الفخامة والواجهات السينمائية." },
+        { q: "ما التقنيات التي تستخدمها؟", a: "أتقن HTML و CSS و JavaScript و Python. أستخدمها لإنشاء تجارب ويب غامرة ودمج الذكاء الاصطناعي وبناء واجهات تفاعلية متقدمة." },
+        { q: "حدثني عن أرتيفا AI.", a: "أرتيفا AI هو مساعد رقمي مصمم خصيصاً لاستعراض قدرات ياسين البرمجية المتقدمة وحسه العصري في تصميم واجهة وتجربة المستخدم (UI/UX)." },
+        { q: "كيف يمكنني التواصل معك؟", a: "يمكنك مراسلتي عبر البريد الإلكتروني eurlprodam@gmail.com أو الاتصال بي مباشرة على +213 662 62 70 69." },
+        { q: "أين تقع؟", a: "أنا موجود في بن طلحة، الجزائر العاصمة، الجزائر." },
+        { q: "هل يمكنني تحميل سيرتك الذاتية؟", a: "نعم، بالتأكيد! يمكنك تحميل سيرتي الذاتية الكاملة بصيغة PDF مباشرة من قسم 'تواصل معنا' في هذا المعرض." },
+        { q: "ما هو مستوى خبرتك؟", a: "أعمل بمستوى نخبة بالنسبة لعمري، حيث أقوم بهيكلة تخطيطات معقدة، وتصميم واجهات فاخرة، وكتابة كود نظيف وقابل للتطوير مثل مطور أول مستقبلي." },
+        { q: "هل تقوم بأعمال حرة (Freelance)؟", a: "نعم، أنا منفتح على فرص العمل الحر المثيرة، والمشاريع المخصصة، والتعاون في تصميم الويب الراقي." },
+        { q: "ما هو 'Cinematic UI'؟", a: "الواجهة السينمائية تشير إلى الواجهات شديدة الانغماس والمليئة بالحركات المذهلة بصرياً التي أبنيها، تماماً مثل التي تتصفحها الآن!" },
+        { q: "حدثني عن مشاريعك في Python.", a: "لقد قمت بتطوير ألعاب بايثون تفاعلية وأدوات متقدمة مدعومة بالذكاء الاصطناعي مثل منشئ الصور 'Python Artiva'." },
+        { q: "هل يمكنك بناء موقع ويب كامل؟", a: "بالتأكيد. يمكنني هيكلة وتصميم وبرمجة مواقع ويب متجاوبة بالكامل من الصفر، لضمان ظهورها بشكل مثالي على جميع الأجهزة." },
+        { q: "ما هي فلسفتك في التصميم؟", a: "أؤمن بدمج الجماليات الفاخرة مع الأداء الخالي من العيوب. الموقع يجب ألا يعمل فقط؛ بل يجب أن يبدو وكأنه تجربة فاخرة." },
+        { q: "ما مدى سرعة تسليمك للمشروع؟", a: "يعتمد ذلك على تعقيد الرؤية، لكنني دائماً أعطي الأولوية للجودة العالية والتسليم الاحترافي في الوقت المحدد." },
+        { q: "هل تعمل مع عناصر 3D؟", a: "نعم! أقوم بدمج تقنيات CSS المتقدمة، ومنطق WebGL، وتأثيرات الميل ثلاثية الأبعاد لإضفاء الحيوية على الواجهات وجعلها تفاعلية." },
+        { q: "لماذا يجب أن أوظفك؟", a: "لأنني أقدم منظوراً إبداعياً جديداً. أجمع بين مهارات البرمجة النخبوية والتصميم الفاخر لجعل مشروعك يتفوق على البقية." }
+    ],
+    es: [
+        { q: "¿Quién es Yacine?", a: "Yacine es un Desarrollador Frontend de Élite de 11 años, un futuro Senior Dev, especializado en experiencias digitales ultra premium e interfaces cinematográficas." },
+        { q: "¿Qué tecnologías utilizas?", a: "Domino HTML, CSS, JavaScript y Python. Las utilizo para crear experiencias web inmersivas, integraciones de IA e interfaces interactivas avanzadas." },
+        { q: "Háblame de Artiva AI.", a: "Artiva AI es un asistente digital personalizado, diseñado para mostrar las capacidades de programación avanzadas de Yacine y su moderno sentido del diseño UI/UX." },
+        { q: "¿Cómo puedo contactarte?", a: "Puedes comunicarte conmigo por correo electrónico a eurlprodam@gmail.com, o simplemente llamarme directamente al +213 662 62 70 69." },
+        { q: "¿Dónde estás ubicado?", a: "Estoy en Bentalha, Argel, Argelia." },
+        { q: "¿Puedo descargar tu currículum?", a: "¡Sí, absolutamente! Puedes descargar mi currículum completo en PDF directamente desde la sección 'Contacto' de este portfolio." },
+        { q: "¿Cuál es tu nivel de experiencia?", a: "Opero a un nivel de élite para mi edad, estructurando diseños complejos, creando interfaces de lujo y escribiendo código limpio y escalable como un futuro Desarrollador Senior." },
+        { q: "¿Haces trabajos freelance?", a: "Sí, estoy abierto a emocionantes oportunidades freelance, proyectos personalizados y colaboraciones de diseño web de alta gama." },
+        { q: "¿Qué es 'Cinematic UI'?", a: "La UI Cinematográfica se refiere a las interfaces altamente inmersivas, ricas en animaciones y visualmente impresionantes que construyo, ¡exactamente como la que estás explorando ahora mismo!" },
+        { q: "Háblame de tus proyectos de Python.", a: "He desarrollado juegos interactivos de Python y herramientas avanzadas impulsadas por IA como el generador de imágenes 'Python Artiva'." },
+        { q: "¿Puedes construir un sitio web completo?", a: "Definitivamente. Puedo estructurar, diseñar y animar sitios web totalmente receptivos desde cero, asegurando que se vean perfectos en todos los dispositivos." },
+        { q: "¿Cuál es tu filosofía de diseño?", a: "Creo en la fusión de la estética de lujo con un rendimiento impecable. Un sitio web no solo debe funcionar; debe sentirse como una experiencia premium." },
+        { q: "¿Qué tan rápido puedes entregar un proyecto?", a: "Depende de la complejidad de la visión, pero siempre priorizo la calidad superior y la entrega profesional y oportuna." },
+        { q: "¿Trabajas con elementos 3D?", a: "¡Sí! Integro técnicas CSS avanzadas, lógica WebGL y efectos de inclinación 3D para dar vida a las interfaces y hacerlas interactivas." },
+        { q: "¿Por qué debería contratarte?", a: "Porque aporto una perspectiva fresca y altamente creativa. Combino habilidades de codificación de élite con un diseño premium para hacer que tu proyecto se destaque del resto." }
+    ],
+    zh: [
+        { q: "Yacine是谁？", a: "Yacine是一位11岁的精英前端开发者，未来的高级开发人员，专门从事超高端数字体验和电影级界面的开发。" },
+        { q: "你使用什么技术？", a: "我精通HTML、CSS、JavaScript和Python。我使用它们来创建沉浸式的网络体验、人工智能集成和高级交互式UI。" },
+        { q: "跟我说说Artiva AI。", a: "Artiva AI是一个定制的数字助手，旨在展示Yacine的高级编程能力和现代UI/UX设计感。" },
+        { q: "我怎么联系你？", a: "您可以通过电子邮件eurlprodam@gmail.com联系我，或者直接致电+213 662 62 70 69。" },
+        { q: "你位于哪里？", a: "我位于阿尔及利亚阿尔及尔的Bentalha。" },
+        { q: "我可以下载你的简历吗？", a: "是的，绝对可以！您可以直接从此作品集的“联系”部分下载我完整的PDF简历。" },
+        { q: "你的经验水平如何？", a: "我在我的年龄段处于精英水平，构建复杂的布局，设计豪华UI，并编写像未来高级开发人员一样干净、可扩展的代码。" },
+        { q: "你做自由职业工作吗？", a: "是的，我对令人兴奋的自由职业机会、定制项目和高端网页设计合作持开放态度。" },
+        { q: "什么是“电影级 UI”？", a: "电影级UI是指我构建的高度沉浸式、动画丰富且视觉上令人惊叹的界面，就像您现在正在探索的这个一样！" },
+        { q: "跟我说说你的Python项目。", a: "我开发了交互式Python游戏和由AI驱动的高级工具，如“Python Artiva”图像生成器。" },
+        { q: "你能建立一个完整的网站吗？", a: "当然可以。我可以从头开始构建、设计和制作完全响应式的网站动画，确保它们在所有设备上看起来都很完美。" },
+        { q: "你的设计理念是什么？", a: "我相信将奢华美学与完美性能相融合。一个网站不应该仅仅是能用；它应该让人感觉像是一种高端体验。" },
+        { q: "你能多快交付一个项目？", a: "这取决于愿景的复杂性，但我始终将顶级质量和专业、及时的交付放在首位。" },
+        { q: "你使用3D元素工作吗？", a: "是的！我集成了高级CSS技术、WebGL逻辑和3D倾斜效果，使界面栩栩如生并具有交互性。" },
+        { q: "我为什么要雇佣你？", a: "因为我带来了一种全新的、极具创造力的视角。我将精英编码技能与高端设计相结合，使您的项目脱颖而出。" }
+    ],
+    de: [
+        { q: "Wer ist Yacine?", a: "Yacine ist ein 11-jähriger Elite Frontend Developer, ein zukünftiger Senior Dev, spezialisiert auf ultra-premium digitale Erlebnisse und cineastische Benutzeroberflächen." },
+        { q: "Welche Technologien verwendest du?", a: "Ich beherrsche HTML, CSS, JavaScript und Python. Ich nutze sie, um immersive Web-Erlebnisse, KI-Integrationen und fortschrittliche interaktive UIs zu erstellen." },
+        { q: "Erzähl mir von Artiva AI.", a: "Artiva AI ist ein maßgeschneiderter digitaler Assistent, der entwickelt wurde, um Yacines fortgeschrittene Programmierfähigkeiten und sein modernes UI/UX-Designverständnis zu präsentieren." },
+        { q: "Wie kann ich dich kontaktieren?", a: "Sie können mich per E-Mail unter eurlprodam@gmail.com erreichen oder mich einfach direkt unter +213 662 62 70 69 anrufen." },
+        { q: "Wo befindest du dich?", a: "Ich habe meinen Sitz in Bentalha, Algier, Algerien." },
+        { q: "Kann ich deinen Lebenslauf herunterladen?", a: "Ja, absolut! Sie können meinen vollständigen PDF-Lebenslauf direkt im Abschnitt 'Kontakt' dieses Portfolios herunterladen." },
+        { q: "Wie ist dein Erfahrungsstand?", a: "Ich arbeite für mein Alter auf einem Elite-Niveau, strukturiere komplexe Layouts, entwerfe Luxus-UIs und schreibe sauberen, skalierbaren Code wie ein zukünftiger Senior Developer." },
+        { q: "Machst du freiberufliche Arbeiten?", a: "Ja, ich bin offen für spannende freiberufliche Möglichkeiten, maßgeschneiderte Projekte und High-End-Webdesign-Kollaborationen." },
+        { q: "Was ist 'Cinematic UI'?", a: "Cinematic UI bezieht sich auf die hochgradig immersiven, animationsreichen und visuell atemberaubenden Benutzeroberflächen, die ich baue – genau wie die, die Sie gerade erkunden!" },
+        { q: "Erzähl mir von deinen Python-Projekten.", a: "Ich habe interaktive Python-Spiele und fortschrittliche KI-gesteuerte Tools wie den Bildgenerator 'Python Artiva' entwickelt." },
+        { q: "Kannst du eine komplette Website erstellen?", a: "Auf jeden Fall. Ich kann vollständig responsive Websites von Grund auf neu strukturieren, entwerfen und animieren und sicherstellen, dass sie auf allen Geräten perfekt aussehen." },
+        { q: "Was ist deine Designphilosophie?", a: "Ich glaube an die Verschmelzung von Luxusästhetik mit makelloser Leistung. Eine Website sollte nicht nur funktionieren; sie sollte sich wie ein Premium-Erlebnis anfühlen." },
+        { q: "Wie schnell kannst du ein Projekt liefern?", a: "Es hängt von der Komplexität der Vision, aber ich lege immer Wert auf erstklassige Qualität und professionelle, pünktliche Lieferung." },
+        { q: "Arbeitest du mit 3D-Elementen?", a: "Ja! Ich integriere fortschrittliche CSS-Techniken, WebGL-Logik und 3D-Neigungseffekte, um Schnittstellen zum Leben zu erwecken und sie interaktiv zu machen." },
+        { q: "Warum sollte ich dich einstellen?", a: "Weil ich eine frische, äußerst kreative Perspektive einbringe. Ich kombiniere Elite-Coding-Fähigkeiten mit Premium-Design, um Ihr Projekt von den anderen abzuheben." }
+    ]
+};
+
+let currentLang = 'en';
+
+function changeLanguage(lang) {
+    document.body.style.opacity = 0;
+    setTimeout(() => {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('currentLangText').innerText = lang.toUpperCase();
+        
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(dict[lang][key]) el.innerText = dict[lang][key];
+        });
+        
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+            const key = el.getAttribute('data-i18n-html');
+            if(dict[lang][key]) el.innerHTML = dict[lang][key];
+        });
+
+        resetChatLanguage();
+        document.getElementById('langMenu').classList.remove('active');
+        document.body.style.opacity = 1;
+        applyCursorHover(); 
+    }, 400);
+}
+
+const langMenu = document.getElementById('langMenu');
+const langBtn = document.getElementById('langBtn');
+
+langBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    langMenu.classList.toggle('active');
+});
+document.addEventListener('click', () => { langMenu.classList.remove('active'); });
+
+/* OFFLINE AI CHAT LOGIC */
+const openChatBtn = document.getElementById('openChatBtn');
+const minimizeChatBtn = document.getElementById('minimizeChatBtn');
+const closeChatBtn = document.getElementById('closeChatBtn');
+const chatOverlay = document.getElementById('chatOverlay');
+const chatBody = document.getElementById('chatBody');
+const suggestionsBox = document.getElementById('suggestionsBox');
+const customConfirmModal = document.getElementById('customConfirmModal');
+
+function renderSuggestions() {
+    suggestionsBox.innerHTML = '';
+    const qas = qaDict[currentLang] || qaDict['en'];
+    qas.forEach((item) => {
+        const btn = document.createElement('button');
+        btn.className = 'suggested-btn';
+        btn.innerHTML = `<span>${item.q}</span>`;
+        btn.onclick = () => handleQuestionClick(item.q, item.a);
+        suggestionsBox.appendChild(btn);
+    });
+    applyCursorHover(); 
+}
+
+function resetChatLanguage() {
+    const messages = chatBody.querySelectorAll('.message');
+    for(let i = 1; i < messages.length; i++) { messages[i].remove(); }
+    renderSuggestions();
+    suggestionsBox.style.display = 'flex';
+    chatBody.appendChild(suggestionsBox);
+}
+
+renderSuggestions();
+
+openChatBtn.addEventListener('click', () => chatOverlay.classList.add('active'));
+minimizeChatBtn.addEventListener('click', () => chatOverlay.classList.remove('active'));
+
+closeChatBtn.addEventListener('click', () => { customConfirmModal.classList.add('active'); });
+document.getElementById('cancelWipeBtn').addEventListener('click', () => { customConfirmModal.classList.remove('active'); });
+
+document.getElementById('confirmWipeBtn').addEventListener('click', () => {
+    customConfirmModal.classList.remove('active');
+    chatOverlay.classList.remove('active');
+    setTimeout(() => { resetChatLanguage(); }, 500);
+});
+
+chatOverlay.addEventListener('click', (e) => { if(e.target === chatOverlay) chatOverlay.classList.remove('active'); });
+customConfirmModal.addEventListener('click', (e) => { if(e.target === customConfirmModal) customConfirmModal.classList.remove('active'); });
+
+function scrollToBottom() { chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }); }
+
+function handleQuestionClick(questionText, answerText) {
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="User"><div class="msg-bubble">${questionText}</div>`;
+    chatBody.insertBefore(userMsg, suggestionsBox);
+    scrollToBottom();
+
+    suggestionsBox.style.display = 'none';
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'message bot typing-msg';
+    typingIndicator.innerHTML = `<img src="Artiva_images/artiva_not_background.png" alt="Bot"><div class="msg-bubble typing-indicator"><span></span><span></span><span></span></div>`;
+    chatBody.insertBefore(typingIndicator, suggestionsBox);
+    scrollToBottom();
+
+    setTimeout(() => {
+        chatBody.removeChild(typingIndicator);
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+        botMsg.innerHTML = `<img src="Artiva_images/artiva_not_background.png" alt="Bot"><div class="msg-bubble">${answerText}</div>`;
+        chatBody.insertBefore(botMsg, suggestionsBox);
+        
+        suggestionsBox.style.display = 'flex';
+        chatBody.appendChild(suggestionsBox);
+        scrollToBottom();
+    }, 1200);
+}
+
+/* DYNAMIC CV GENERATOR */
+const downloadCvBtn = document.getElementById('downloadCvBtn');
+if(downloadCvBtn) {
+    downloadCvBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const cvHTML = `<!DOCTYPE html>
+        <html lang="en" dir="ltr">
+        <head>
+            <meta charset="UTF-8">
+            <title>Yacine - Elite Professional Resume</title>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; padding: 40px; margin: 0; }
+                .container { max-width: 850px; margin: 0 auto; background: #1e293b; padding: 50px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-top: 6px solid #38bdf8; }
+                h1 { font-size: 3.2rem; margin-bottom: 10px; color: #fff; background: linear-gradient(90deg, #38bdf8, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+                h2 { color: #38bdf8; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 40px; font-size: 1.6rem; }
+                p { margin: 10px 0; font-size: 1.1rem; }
+                .contact-info { color: #94a3b8; font-size: 1.1rem; margin-bottom: 40px; display: flex; gap: 20px; flex-wrap: wrap;}
+                .contact-info span { background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+                ul { margin-top: 15px; padding-left: 20px; }
+                li { margin-bottom: 12px; font-size: 1.05rem; }
+                strong { color: #fff; }
+                .highlight { color: #38bdf8; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Yacine</h1>
+                <div class="contact-info">
+                    <span>📞 +213 662 62 70 69</span>
+                    <span>✉️ eurlprodam@gmail.com</span>
+                    <span>📍 Algiers, Algeria</span>
+                </div>
+
+                <h2>Professional Profile</h2>
+                <p>A highly versatile professional operating at the intersection of Software Engineering, Mechatronics, and Chemical Research. Excels as a Senior Frontend Developer building ultra-premium cinematic web experiences, while simultaneously advancing mechatronics prototyping and conducting Master's level research in green energy.</p>
+
+                <h2>Technical & Scientific Expertise</h2>
+                <ul>
+                    <li><strong>Frontend Engineering:</strong> Senior-level mastery in <span class="highlight">React.js, Tailwind CSS, HTML5, CSS3, JavaScript, and Python</span>. Specialized in dark-mode UIs (AMOLED, Glassmorphism) and complex 3D web animations.</li>
+                    <li><strong>Mechatronics & Hardware:</strong> Designing and troubleshooting automated systems using <span class="highlight">ESP32/ESP32-C3 microcontrollers, MOSFET circuits</span>, EasyEDA schematics, and 12V solenoid actuators.</li>
+                    <li><strong>Analytical Chemistry:</strong> Master's researcher focusing on the photocatalytic production of <span class="highlight">green hydrogen from plastic waste (PP and PET)</span> utilizing nanoparticle catalysts (CdS, CdO, ZnO).</li>
+                    <li><strong>Game Development:</strong> Developing custom voxel-based game engines implementing core survival mechanics (hunger, health, world spawning).</li>
+                    <li><strong>Water Treatment:</strong> Technical analysis of remineralization systems and calcite bed processes (e.g., Fouka 2 desalination plant).</li>
+                </ul>
+
+                <h2>Elite Projects & Research</h2>
+                <ul>
+                    <li><strong>Master's Thesis:</strong> "Photocatalytic production of green hydrogen from plastic waste using nanoparticle catalysts" utilizing the Dual Challenge framework.</li>
+                    <li><strong>Smart Delivery Locker:</strong> Prototyped a complete hardware/software locker automation system.</li>
+                    <li><strong>Premium Web Platforms:</strong> Engineered ultra-luxury platforms including "Horis ArchiDesign", "L'oasis Rouge", and an AI-integrated Elite Portfolio.</li>
+                    <li><strong>Pilots Application:</strong> Developed an aviation-themed application with precise location mapping.</li>
+                </ul>
+            </div>
+        </body>
+        </html>`;
+        
+        const blob = new Blob([cvHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Yacine_Elite_Resume.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+}
+</script>
+
+</body>
+</html>
